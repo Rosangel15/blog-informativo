@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Señas3D - Rompiendo barreras con tecnología</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
+        /* Efecto de partículas de fondo */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 255, 255, 0.5);
+            border-radius: 50%;
+            box-shadow: 0 0 10px cyan;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Efecto de escaneo para las tarjetas */
+        .scan-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scan-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                transparent 30%,
+                rgba(0, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            transform: rotate(30deg);
+            animation: scan 3s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            from { transform: rotate(30deg) translateX(-100%); }
+            to { transform: rotate(30deg) translateX(100%); }
+        }
+        
+        /* Animación para el texto 3D */
+        .float-text {
+            animation: floatText 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+        
+        /* Gradientes neón */
+        .neon-text {
+            background: linear-gradient(45deg, #fff, #aaccff, cyan, magenta);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: gradientShift 5s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .neon-border {
+            position: relative;
+            border: 2px solid transparent;
+            background: linear-gradient(#0a0a0f, #0a0a0f) padding-box,
+                        linear-gradient(45deg, cyan, magenta, cyan) border-box;
+            border-radius: 24px;
+            background-size: 200% 200%;
+            animation: borderShift 3s infinite;
+        }
+        
+        @keyframes borderShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glow-on-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .glow-on-hover:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .hand-gesture {
+            display: inline-block;
+            animation: handWave 2s ease-in-out infinite;
+        }
+        
+        @keyframes handWave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: cyan;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, cyan, magenta);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="text-white relative">
+    <!-- Partículas de fondo -->
+    <div id="particles"></div>
+    
+    <!-- Navegación flotante -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-3xl hand-gesture">🤟</span>
+                    <span class="text-2xl font-black neon-text">Señas<span class="text-white">3D</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#inicio" class="hover:text-cyan-300 transition">Inicio</a>
+                    <a href="#como-funciona" class="hover:text-cyan-300 transition">Cómo funciona</a>
+                    <a href="#beneficios" class="hover:text-cyan-300 transition">Beneficios</a>
+                    <a href="#demo" class="hover:text-cyan-300 transition">Demo</a>
+                </div>
+                <div class="flex space-x-3">
+                    <button class="px-4 py-2 bg-cyan-500/20 border border-cyan-500/50 rounded-full text-cyan-300 hover:bg-cyan-500/30 transition">
+                        <i class="fas fa-play mr-2"></i>Probar ahora
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto px-6 z-10">
+            <div class="text-center max-w-5xl mx-auto">
+                <!-- Badge -->
+                <div class="inline-block mb-8 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-300 text-sm">
+                    🚀 Lanzamiento 2026 | Tecnología de detección en tiempo real
+                </div>
+                
+                <!-- Título principal -->
+                <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight">
+                    <span class="neon-text">Rompe</span>
+                    <span class="text-white"> el silencio</span>
+                    <br>
+                    <span class="text-white">con el poder de</span>
+                    <span class="neon-text"> tus manos</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
+                    La primera plataforma interactiva que traduce lenguaje de señas en tiempo real usando inteligencia artificial. Aprende, comunícate y conecta sin barreras.
+                </p>
+                
+                <!-- CTAs -->
+                <div class="flex flex-col md:flex-row gap-6 justify-center mb-16">
+                    <button class="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-lg font-bold overflow-hidden">
+                        <span class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition duration-500"></span>
+                        <span class="relative"><i class="fas fa-hand-peace mr-2"></i>Comenzar a aprender</span>
+                    </button>
+                    <button class="px-8 py-4 border-2 border-cyan-500/50 rounded-full text-lg font-bold hover:bg-cyan-500/10 transition">
+                        <i class="fas fa-play-circle mr-2"></i>Ver demo (1 min)
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                    <div class="stat-card">
+                        <div class="stat-number">26</div>
+                        <div class="text-gray-400">Letras detectables</div>
+                        <div class="text-cyan-300 text-sm">Abecedario completo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0.3s</div>
+                        <div class="text-gray-400">Latencia</div>
+                        <div class="text-cyan-300 text-sm">Tiempo de respuesta</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">98%</div>
+                        <div class="text-gray-400">Precisión</div>
+                        <div class="text-cyan-300 text-sm">En condiciones óptimas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Elementos decorativos flotantes -->
+        <div class="absolute bottom-20 left-10 text-7xl opacity-20 animate-pulse">👋</div>
+        <div class="absolute top-40 right-20 text-7xl opacity-20 animate-bounce">✋</div>
+        <div class="absolute bottom-40 right-40 text-7xl opacity-20 hand-gesture">🤟</div>
+    </section>
+    
+    <!-- Sección: ¿Cómo funciona? -->
+    <section id="como-funciona" class="py-32 relative">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Tecnología <span class="neon-text">3D</span> en acción</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Detección precisa de 21 puntos clave por mano usando Machine Learning y visión computacional
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="relative">
+                    <div class="neon-border p-2 rounded-2xl overflow-hidden">
+                        <img src="api/placeholder/600/400" alt="Hand tracking demo" class="rounded-2xl w-full">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <div class="bg-black/50 backdrop-blur-md rounded-xl p-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-cyan-300">✋ Mano derecha</span>
+                                    <span class="text-2xl font-bold neon-text" id="demo-letter">L</span>
+                                </div>
+                                <div class="w-full bg-gray-700 h-2 rounded-full mt-2">
+                                    <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <span class="text-xs text-gray-400">Letra detectada: L (100% confianza)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-8">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                            🎥
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">1. Captura en tiempo real</h3>
+                            <p class="text-gray-400">Usa cualquier cámara web. La app analiza 30 fotogramas por segundo para detectar la posición exacta de tus manos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                            🧠
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">2. IA y geometría de manos</h3>
+                            <p class="text-gray-400">MediaPipe Hands analiza 21 puntos clave por mano. Comparamos distancias y ángulos con nuestra base de datos de señas.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                            ✨
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">3. Visualización 3D</h3>
+                            <p class="text-gray-400">La letra detectada aparece en 3D con efectos neón. Puedes verla desde cualquier ángulo para aprender la posición correcta.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 items-start">
+                        <div class="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center text-2xl flex-shrink-0">
+                            📝
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold mb-2">4. Formador de palabras</h3>
+                            <p class="text-gray-400">Mano izquierda abierta = confirmar letra. Construye palabras completas y comunícate en tiempo real.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sección: Beneficios / Para quién es -->
+    <section id="beneficios" class="py-32 relative bg-gradient-to-b from-black/50 to-transparent">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">¿Quién puede <span class="neon-text">beneficiarse</span>?</h2>
+                <p class="text-xl text-gray-400">Una herramienta para todos, sin importar la edad o el contexto</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group scan-effect bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-cyan-500/50 transition-all">
+                    <div class="text-6xl mb-6 transform group-hover:scale-110 transition">👶</div>
+                    <h3 class="text-2xl font-bold mb-3">Estudiantes</h3>
+                    <p class="text-gray-400 mb-4">Aprende lenguaje de señas de forma interactiva. Ideal para escuelas y universidades.</p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>26 letras con instrucciones</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Feedback visual inmediato</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Modo práctica con IA</li>
+                    </ul>
+                </div>
+                
+                <div class="group bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-cyan-500/50 transition-all">
+                    <div class="text-6xl mb-6 transform group-hover:scale-110 transition">🧏</div>
+                    <h3 class="text-2xl font-bold mb-3">Personas sordas</h3>
+                    <p class="text-gray-400 mb-4">Comunícate con quienes tiene discapacidad auditiva. La app traduce en tiempo real.</p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Traducción instantánea</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Formador de palabras</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Interfaz intuitiva</li>
+                    </ul>
+                </div>
+                
+                <div class="group bg-white/5 backdrop-blur-lg rounded-3xl p-8 border border-white/10 hover:border-cyan-500/50 transition-all">
+                    <div class="text-6xl mb-6 transform group-hover:scale-110 transition">👨‍👩‍👧</div>
+                    <h3 class="text-2xl font-bold mb-3">Familias</h3>
+                    <p class="text-gray-400 mb-4">Si tienes un familiar con discapacidad auditiva, esta app rompe la barrera de comunicación.</p>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Fácil de usar</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Aprendizaje conjunto</li>
+                        <li><i class="fas fa-check text-cyan-400 mr-2"></i>Sin costo adicional</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Estadística emocional -->
+            <div class="mt-20 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl p-12 border border-white/10">
+                <div class="max-w-3xl mx-auto text-center">
+                    <div class="text-6xl mb-6">🌍</div>
+                    <h3 class="text-3xl font-bold mb-4">Más de 70 millones de personas en el mundo son sordas</h3>
+                    <p class="text-xl text-gray-300 mb-8">Con tu ayuda y nuestra tecnología, podemos hacer la comunicación accesible para todos</p>
+                    <div class="w-full bg-gray-700 h-4 rounded-full overflow-hidden">
+                        <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-4 rounded-full" style="width: 15%"></div>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">Solo el 15% de la población mundial conoce lenguaje de señas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sección: Letras y demostración interactiva -->
+    <section id="demo" class="py-32 relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Explora el <span class="neon-text">abecedario</span> en señas</h2>
+                <p class="text-xl text-gray-400">Pasa el mouse sobre cada letra para ver la instrucción</p>
+            </div>
+            
+            <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4 max-w-4xl mx-auto">
+                <!-- Generamos las letras con JS dinámico -->
+                <div id="alphabet-demo" class="col-span-full grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4"></div>
+            </div>
+            
+            <div class="mt-16 max-w-2xl mx-auto bg-white/5 backdrop-blur-lg rounded-3xl p-8 text-center">
+                <h3 class="text-2xl font-bold mb-4">¿Listo para probarlo tú mismo?</h3>
+                <p class="text-gray-400 mb-6">Solo necesitas una cámara y ganas de aprender. La app es 100% gratuita.</p>
+                <button class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-lg font-bold hover:shadow-[0_0_30px_cyan] transition">
+                    <i class="fas fa-rocket mr-2"></i>Abrir app ahora
+                </button>
+                <p class="text-sm text-gray-500 mt-4">No requiere registro. Funciona en Chrome, Edge y Brave.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sección: Call to action final -->
+    <section class="py-32 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-cyan-500/20 to-transparent"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h2 class="text-6xl md:text-7xl font-black mb-8">Únete a la <span class="neon-text">revolución</span></h2>
+            <p class="text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
+                Cada persona que aprende señas es un puente más hacia un mundo sin barreras. 
+                Comparte, aprende y conecta.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-6 justify-center">
+                <button class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-lg font-bold hover:shadow-[0_0_30px_cyan] transition">
+                    <i class="fas fa-hand-peace mr-2"></i>Probar demo
+                </button>
+                <button class="px-8 py-4 border-2 border-cyan-500/50 rounded-full text-lg font-bold hover:bg-cyan-500/10 transition">
+                    <i class="fab fa-twitter mr-2"></i>Compartir
+                </button>
+            </div>
+            
+            <div class="mt-20 text-8xl opacity-30 flex justify-center gap-8">
+                <span>🤟</span>
+                <span>👌</span>
+                <span>✌️</span>
+                <span>🤙</span>
+                <span>👋</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="text-2xl font-black neon-text mb-4">Señas3D</div>
+                    <p class="text-gray-400">Tecnología inclusiva para un mundo sin barreras.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Creadora</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-cyan-300">Rosangel Alvarez</a></li>
+                        <li><a href="#" class="hover:text-cyan-300">Venezolana</a></li>
+                    </ul>
+                </div>
+                
+            </div>
+            <div class="border-t border-white/10 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2026 Señas3D. Hecho con ❤️ para la comunidad sorda.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Generar partículas de fondo
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (10 + Math.random() * 20) + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Generar alfabeto interactivo
+        function generateAlphabet() {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            const container = document.getElementById('alphabet-demo');
+            container.innerHTML = '';
+            
+            alphabet.forEach(letter => {
+                const card = document.createElement('div');
+                card.className = 'bg-white/5 backdrop-blur-lg rounded-xl p-4 text-center cursor-pointer hover:bg-cyan-500/20 transition border border-transparent hover:border-cyan-500/50 relative group';
+                
+                const letterElement = document.createElement('div');
+                letterElement.className = 'text-3xl font-bold text-cyan-300';
+                letterElement.textContent = letter;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-sm rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-20 border border-cyan-500';
+                tooltip.textContent = window.letterInstructions?.[letter] || 'Instrucción no disponible';
+                
+                card.appendChild(letterElement);
+                card.appendChild(tooltip);
+                container.appendChild(card);
+            });
+        }
+        
+        // Instrucciones (mismo objeto que en tu script.js)
+        window.letterInstructions = {
+            'A': 'Puño cerrado, pulgar al lado del índice',
+            'B': 'Mano abierta con dedos juntos, pulgar cruzado sobre la palma',
+            'C': 'Dedos curvados formando una C, pulgar separado',
+            'D': 'Índice arriba, pulgar tocando el dedo medio',
+            'E': 'Puño cerrado, pulgar sobre los dedos',
+            'F': 'Pulgar e índice tocándose, otros dedos arriba',
+            'G': 'Índice y pulgar paralelos hacia un lado',
+            'H': 'Índice y medio extendidos y juntos, pulgar tocando el medio',
+            'I': 'Solo el meñique arriba, los demás cerrados',
+            'J': 'Similar a I pero con movimiento de gancho',
+            'K': 'Índice y medio arriba en V, pulgar entre ellos',
+            'L': 'Índice arriba, pulgar abierto en L',
+            'M': 'Dedos índice, medio y anular sobre el pulgar',
+            'N': 'Similar a M pero con dos dedos sobre el pulgar',
+            'O': 'Dedos tocando el pulgar formando un círculo',
+            'P': 'Índice hacia abajo, pulgar tocando el medio',
+            'Q': 'Índice hacia abajo, pulgar separado',
+            'R': 'Índice y medio cruzados',
+            'S': 'Puño cerrado, pulgar cruzado sobre los dedos',
+            'T': 'Puño cerrado, pulgar entre índice y medio',
+            'U': 'Índice y medio arriba y juntos',
+            'V': 'Índice y medio arriba en V',
+            'W': 'Índice, medio y anular arriba',
+            'X': 'Índice curvado, los demás cerrados',
+            'Y': 'Pulgar y meñique arriba, los demás cerrados'
+        };
+        
+        createParticles();
+        generateAlphabet();
+        
+        // Animación de letra en hero demo
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let index = 0;
+        setInterval(() => {
+            const demoLetter = document.getElementById('demo-letter');
+            if (demoLetter) {
+                demoLetter.textContent = letters[index];
+                index = (index + 1) % letters.length;
+            }
+        }, 500);
+    </script>
+</body>
+</html>
